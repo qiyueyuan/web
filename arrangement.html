@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>规划总结</title>
+    <meta name="keywords" content=""/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=1.0, user-scalable=0"/>
+    <link rel="stylesheet" href="./css/jquery.circliful.css"/>
+    <link rel="stylesheet" href="./css/base.css"/>
+    <link rel="stylesheet" href="./css/evaluate.css"/>
+    <script src="js/wap-resize.js"></script>
+    <script src="js/template-web.js"></script>
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery.circliful.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+</head>
+<body class="evaluate-wrap">
+<div id="evaluate-view"></div>
+<script id="tpl-study-content" type="text/html">
+    <div class="evaluate-view-wrap">
+        <div class="evaluate-view">
+            {{set reportInfo = report.info}}
+            <div class="banner">
+                <div class="student-name">
+                    <div class="report-name">{{info.name}}</div>
+                    <div class="report-title">{{info.title}}</div>
+                </div>
+                <div class="title">{{reportInfo.name}}</div>
+            </div>
+            <div class="plr20">
+                <div class="chart-ctn clearfix">
+                    <div id="myStat" data-dimension="150" class="fl"></div>
+                    <div class="knowledge">
+                        <p class="txt">知识点</p>
+                        <p class="txt"><span class="spe">{{reportInfo.kpoints}}</span>个</p>
+                        <p class="txt">课次</p>
+                        <p class="txt"><span class="spe">{{reportInfo.classes}}</span>次</p>
+                    </div>
+                    <div class="intr-con fr">
+                        <p class="will intr"><i class="bg-icon"></i>待巩固率：<span class="spe">{{((reportInfo.bkpnum*100)/reportInfo.kpoints).toFixed(2)}}%</span></p>
+                        <p class="has intr"><i class="bg-icon"></i>已掌握率：<span class="spe">{{((reportInfo.gkpnum*100)/reportInfo.kpoints).toFixed(2)}}%</span></p>
+                    </div>
+                </div>
+            </div>
+            {{set reportList = report.list}}
+            <div class="evaluate-list plr20">
+                {{if reportList.glist.length>0}}
+                <label class="index-label">已掌握知识点</label>
+                <div class="list-item clearfix">
+                    {{each reportList.glist value i}}
+                    <span class="item-tag">{{value.title}}</span>
+                    {{/each}}
+                </div>
+                {{/if}}
+                {{if reportList.blist.length>0}}
+                <label class="index-label">需要巩固知识点</label>
+                <div class="list-item clearfix">
+                    {{each reportList.blist value i}}
+                    <span class="item-tag">{{value.title}}</span>
+                    {{/each}}
+                </div>
+                {{/if}}
+
+                <label class="index-label">学习总结</label>
+                <div class="eval-result-item">
+                    <label>听课状态</label>
+                    <% for(var i = 0; i < 5; i++){ %>
+                    <span class="{{reportInfo.status>i?'star-sp active':'star-sp'}}"></span>
+                    <% } %>
+                    <!--<span class="star-info">{{reportInfo.statusTxt}}</span>-->
+                </div>
+                <div class="eval-result-item">
+                    <label>课堂练习</label>
+                    <% for(var i = 0; i < 5; i++){ %>
+                    <span class="{{reportInfo.practice>i?'star-sp active':'star-sp'}}"></span>
+                    <% } %>
+                    <!--<span class="star-info">{{reportInfo.practiceTxt}}</span>-->
+                </div>
+                <div class="eval-result-item">
+                    <label>课后作业</label>
+                    <% for(var i = 0; i < 5; i++){ %>
+                    <span class="{{reportInfo.review>i?'star-sp active':'star-sp'}}"></span>
+                    <% } %>
+                    <!--<span class="star-info">{{reportInfo.reviewTxt}}</span>-->
+                </div>
+                {{if reportInfo.message}}
+                <label class="index-label">春季总结</label>
+                <div class="eval-teacher-notice">
+                    <p>{{reportInfo.message}}</p>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+        <div class="report-tit">暑期规划</div>
+        <div class="evaluate-view">
+            {{set planInfo = plan.info}}
+            <div class="evaluate-list plr20">
+                {{if planInfo.level==1}}
+                    {{each plan.list item i}}
+                    <div class="list-item course-list-item">
+                        <h3 class="th-tit">{{item.num}}<span class="content-tit">{{item.title}}</span></h3>
+                        <div class="clearfix">
+                            {{each item.sub subItem j}}
+                            <span class="item-tag fl">{{subItem.title}}</span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/each}}
+                {{else if planInfo.level==2}}
+                {{each plan.list item i}}
+                <div class="list-item">
+                    <h2 class="com-tit">
+                        <label class="index-label">{{item.title}}</label>
+                    </h2>
+                    <div class="clearfix">
+                        {{each item.sub subItem j}}
+                        <h3 class="th-tit f-clear">{{subItem.title}}</h3>
+                        {{each subItem.sub thirdItem k}}
+                        <span class="item-tag fl">{{thirdItem.title}}</span>
+                        {{/each}}
+                        {{/each}}
+                    </div>
+                </div>
+                {{/each}}
+                {{/if}}
+
+                {{if planInfo.message}}
+                <label class="index-label">暑期寄语</label>
+                <div class="eval-teacher-notice">
+                    <p>{{planInfo.message}}</p>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+        <div class="float-box" id="floatBox">
+            {{ if info.status==0}}
+            <div class="clearfix">
+                <p class="para">距离续报开始还有{{info.lastday}}天</p>
+                <div class="btn fr w40 disabled">续 报</div>
+            </div>
+            {{else if info.lastday>1}}
+            <div class="btn" id="goApply">续 报</div>
+            {{else if info.status==2}}
+            <div class="btn disabled">续报已结束</div>
+            {{/if}}
+        </div>
+    </div>
+</script>
+</body>
+</html>
